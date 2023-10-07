@@ -1,26 +1,70 @@
 "use client";
 import React, { useState } from "react";
 import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
 //import Footer from "../../../components/Footer";
 
+const Footer = ({ locationCount }) => {
+  return (
+    <footer className="bg-gray-200 text-center text-gray-950 p-4">
+      <p>Total Locations: {locationCount}</p>
+    </footer>
+  );
+};
+
 const Page = () => {
-  const [location, setLocation] = useState("Barcelona");
+  const [location, setLocation] = useState("");
   const [minCustomers, setMinCustomers] = useState(0);
   const [maxCustomers, setMaxCustomers] = useState(0);
   const [avgCookies, setAvgCookies] = useState(0);
   const [cookieStandData, setCookieStandData] = useState([]);
+  const locationCount = cookieStandData.length;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const newCookieStand = {
-      Location: location,
-      Min: parseInt(minCustomers),
-      Max: parseInt(maxCustomers),
-      Avg: parseFloat(avgCookies),
+      location,
+      minCustomers: parseInt(minCustomers),
+      maxCustomers: parseInt(maxCustomers),
+      avgCookies: parseFloat(avgCookies),
     };
 
     setCookieStandData([...cookieStandData, newCookieStand]);
+  };
+
+  const generateTable = () => {
+    const hours = Array.from({ length: 14 }, (_, i) => i + 6);
+    const totalColumn = hours.reduce((acc, hour) => acc + hour, 0);
+
+    return (
+      <table className="border-collapse border border-gray-700 w-full">
+        <thead>
+          <tr>
+            <th>Location</th>
+            {hours.map((hour) => (
+              <th key={hour}>{`${hour}:00`}</th>
+            ))}
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cookieStandData.map((cookieStand, index) => (
+            <tr key={index}>
+              <td>{cookieStand.location}</td>
+              {hours.map((hour) => (
+                <td key={`${cookieStand.location}-${hour}`}>
+                  {Math.floor(
+                    ((cookieStand.minCustomers + cookieStand.maxCustomers) /
+                      2) *
+                      cookieStand.avgCookies
+                  )}
+                </td>
+              ))}
+              <td>{totalColumn}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
   };
 
   return (
@@ -112,17 +156,19 @@ const Page = () => {
         </div>
       </main>
 
-      <Footer />
-
       <div className="flex justify-center items-center pt-6">
-        <p className="text-center">Report table coming soon...</p>
+        <p className="text-center">Report table:</p>
       </div>
 
       <div className="flex justify-center items-center pb-6">
-        <pre>
-          {JSON.stringify(cookieStandData[cookieStandData.length - 1], null, 2)}
-        </pre>
+        {cookieStandData.length > 0 ? (
+          generateTable()
+        ) : (
+          <p>No cookie stand data available.</p>
+        )}
       </div>
+
+      <Footer locationCount={locationCount} />
     </div>
   );
 };
