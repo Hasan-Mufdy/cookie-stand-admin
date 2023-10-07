@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Header from "../../../components/Header";
+import { data } from "../../../data/data";
 //import Footer from "../../../components/Footer";
 
 const Footer = ({ locationCount }) => {

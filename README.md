@@ -1,3 +1,23 @@
+# Cookie Stand Admin
+
+Cookie Stand Admin is a web application that allows users to manage and view details of various cookie stands, including their location,and average sales per customer. Users can add new cookie stands and view a summary of all existing stands.
+
+## Features
+
+- Add Cookie Stand: Users can add new cookie stands by providing the location, minimum and maximum customers per hour, and average cookies per sale.
+
+- Display Cookie Stands: All cookie stands are displayed in a table format, showing details such as location and hourly sales.
+
+- Hourly Sales Total: The application calculates and displays the total sales for each hour based on the cookie stands' data.
+
+- Footer with Summary: The footer of the application displays a summary, including the total number of cookie stands available.
+
+## Technologies Used
+
+- React: A JavaScript library for building user interfaces.
+- Next.js: A React-based framework for building server-rendered applications.
+- Tailwind CSS: A utility-first CSS framework for styling the application.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
