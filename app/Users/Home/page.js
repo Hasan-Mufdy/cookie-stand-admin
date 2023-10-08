@@ -18,7 +18,7 @@ const Page = () => {
   const [maxCustomers, setMaxCustomers] = useState(0);
   const [avgCookies, setAvgCookies] = useState(0);
   const [cookieStandData, setCookieStandData] = useState([]);
-  const locationCount = cookieStandData.length;
+  const locationCount = parseInt(cookieStandData.length);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -33,8 +33,46 @@ const Page = () => {
   };
 
   const generateTable = () => {
+    const fixedNumbers = [
+      48, 42, 30, 24, 42, 24, 36, 42, 42, 48, 36, 42, 24, 36,
+    ];
     const hours = Array.from({ length: 14 }, (_, i) => i + 6);
-    const totalColumn = hours.reduce((acc, hour) => acc + hour, 0);
+
+    const calculateTotalForHour = (hour, fixedNumber) => {
+      return cookieStandData.reduce((acc, cookieStand) => {
+        return (
+          acc +
+          Math.floor(
+            ((cookieStand.minCustomers + cookieStand.maxCustomers) / 2) *
+              cookieStand.avgCookies *
+              fixedNumber
+          )
+        );
+      }, 0);
+    };
+
+    const calculateTotalForAllHours = (fixedNumber) => {
+      return cookieStandData.reduce((acc, cookieStand) => {
+        return (
+          acc +
+          Math.floor(
+            ((cookieStand.minCustomers + cookieStand.maxCustomers) / 2) *
+              cookieStand.avgCookies *
+              fixedNumber
+          )
+        );
+      }, 0);
+    };
+
+    // Calculate the total for each hour
+    const hourTotals = fixedNumbers.map((num, idx) =>
+      calculateTotalForHour(idx + 6, num)
+    );
+
+    // Calculate the total of totals
+    const totalOfTotals = calculateTotalForAllHours(
+      fixedNumbers.reduce((acc, num) => acc + num, 0)
+    );
 
     return (
       <table className="border-collapse border border-gray-700 w-full">
@@ -51,19 +89,24 @@ const Page = () => {
           {cookieStandData.map((cookieStand, index) => (
             <tr key={index}>
               <td>{cookieStand.location}</td>
-              {hours.map((hour) => (
-                <td key={`${cookieStand.location}-${hour}`}>
-                  {Math.floor(
-                    ((cookieStand.minCustomers + cookieStand.maxCustomers) /
-                      2) *
-                      cookieStand.avgCookies
-                  )}
-                </td>
+              {fixedNumbers.map((num, idx) => (
+                <td key={`${cookieStand.location}-${hours[idx]}`}>{num}</td>
               ))}
-              <td>{totalColumn}</td>
+              <td>{fixedNumbers.reduce((acc, num) => acc + num, 0)}</td>
             </tr>
           ))}
         </tbody>
+        <tfoot>
+  <tr>
+    <td>Total</td>
+    {fixedNumbers.map((num, idx) => {
+      const totalForHour = num * locationCount; // Calculate total for each hour
+      return <td key={`total-${idx}`}>{totalForHour}</td>;
+    })}
+    <td>{fixedNumbers.reduce((acc, num) => acc + num * locationCount, 0)}</td>
+  </tr>
+</tfoot>
+
       </table>
     );
   };
