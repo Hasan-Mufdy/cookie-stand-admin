@@ -1,10 +1,8 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import Header from "../../components/CookieStandHeader";
+import Footer from "../../components/CookieStandFooter";
 
 import React from "react";
 
-const UsersPage = () => {
-
-};
+const UsersPage = () => {};
 
 export default UsersPage;

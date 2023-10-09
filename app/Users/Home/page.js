@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Header from "../../../components/Header";
+import Header from "../../../components/CookieStandHeader";
 import { data } from "../../../data/data";
 //import Footer from "../../../components/Footer";
 
@@ -69,10 +69,15 @@ const Page = () => {
       calculateTotalForHour(idx + 6, num)
     );
 
-    // Calculate the total of totals
     const totalOfTotals = calculateTotalForAllHours(
       fixedNumbers.reduce((acc, num) => acc + num, 0)
     );
+
+    const handleDeleteCookieStand = (index) => {
+      const updatedCookieStandData = [...cookieStandData];
+      updatedCookieStandData.splice(index, 1);
+      setCookieStandData(updatedCookieStandData);
+    };
 
     return (
       <table className="border-collapse border border-gray-700 w-full">
@@ -83,6 +88,7 @@ const Page = () => {
               <th key={hour}>{`${hour}:00`}</th>
             ))}
             <th>Total</th>
+            <th>Action</th> {/* Add a new header for the delete button */}
           </tr>
         </thead>
         <tbody>
@@ -93,20 +99,29 @@ const Page = () => {
                 <td key={`${cookieStand.location}-${hours[idx]}`}>{num}</td>
               ))}
               <td>{fixedNumbers.reduce((acc, num) => acc + num, 0)}</td>
+              <td>
+                <button
+                  onClick={() => handleDeleteCookieStand(index)}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
         <tfoot>
-  <tr>
-    <td>Total</td>
-    {fixedNumbers.map((num, idx) => {
-      const totalForHour = num * locationCount; // Calculate total for each hour
-      return <td key={`total-${idx}`}>{totalForHour}</td>;
-    })}
-    <td>{fixedNumbers.reduce((acc, num) => acc + num * locationCount, 0)}</td>
-  </tr>
-</tfoot>
-
+          <tr>
+            <td>Total</td>
+            {fixedNumbers.map((num, idx) => {
+              const totalForHour = num * locationCount; // Calculate total for each hour
+              return <td key={`total-${idx}`}>{totalForHour}</td>;
+            })}
+            <td>
+              {fixedNumbers.reduce((acc, num) => acc + num * locationCount, 0)}
+            </td>
+          </tr>
+        </tfoot>
       </table>
     );
   };
